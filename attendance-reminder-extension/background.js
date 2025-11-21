@@ -12,11 +12,21 @@ const CLASS_START_TIMES = [
 ];
 
 // 現在の授業時間帯を取得
-function getCurrentClassPeriod(minutesBefore, minutesAfter) {
+function getCurrentClassPeriod(minutesBefore, minutesAfter, classSchedule) {
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
     const currentTime = currentHour * 60 + currentMinute;
+    const dayOfWeek = now.getDay(); // 0=日曜, 1=月曜, ..., 6=土曜
+
+    // 曜日を文字列に変換
+    const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const dayKey = dayMap[dayOfWeek];
+
+    // 土日または設定がない場合はnullを返す
+    if (dayOfWeek === 0 || dayOfWeek === 6 || !classSchedule || !classSchedule[dayKey]) {
+        return null;
+    }
 
     for (const classTime of CLASS_START_TIMES) {
         const startDate = new Date();
@@ -29,7 +39,13 @@ function getCurrentClassPeriod(minutesBefore, minutesAfter) {
         const endTime = afterDate.getHours() * 60 + afterDate.getMinutes();
 
         if (currentTime >= startTime && currentTime <= endTime) {
-            return classTime;
+            // この時限がスケジュールにチェックされているかを確認
+            const periodIndex = classTime.period - 1; // 0-indexed
+            if (classSchedule[dayKey][periodIndex]) {
+                return classTime;
+            } else {
+                return null; // 時限はあるがスケジュールで無効化されている
+            }
         }
     }
 
@@ -50,11 +66,21 @@ function isAttendanceCompleted(periodNumber, callback) {
 
 // 新しいタブが作成されたときのイベントリスナー
 chrome.tabs.onCreated.addListener((tab) => {
+    // デフォルトのスケジュール（全てtrue）
+    const defaultSchedule = {
+        mon: [true, true, true, true, true],
+        tue: [true, true, true, true, true],
+        wed: [true, true, true, true, true],
+        thu: [true, true, true, true, true],
+        fri: [true, true, true, true, true]
+    };
+
     // 設定を読み込む
     chrome.storage.sync.get({
         showPopupOnNewTab: false,
         minutesBefore: DEFAULT_MINUTES_BEFORE,
-        minutesAfter: DEFAULT_MINUTES_AFTER
+        minutesAfter: DEFAULT_MINUTES_AFTER,
+        classSchedule: defaultSchedule
     }, (items) => {
         // 設定がオフの場合は何もしない
         if (!items.showPopupOnNewTab) {
@@ -67,8 +93,8 @@ chrome.tabs.onCreated.addListener((tab) => {
             return;
         }
 
-        // 現在の授業時間帯を取得
-        const period = getCurrentClassPeriod(items.minutesBefore, items.minutesAfter);
+        // 現在の授業時間帯を取得（classScheduleを渡す）
+        const period = getCurrentClassPeriod(items.minutesBefore, items.minutesAfter, items.classSchedule);
 
         if (period) {
             // 出席登録済みかチェック

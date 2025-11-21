@@ -52,9 +52,115 @@
             </div>
         </div>
 
+        <div class="setting-group">
+            <label for="auto-save-toggle">自動保存</label>
+            <div class="toggle-row">
+                <label class="switch">
+                    <input type="checkbox" id="auto-save-toggle">
+                    <span class="slider-toggle"></span>
+                </label>
+                <span class="toggle-label">設定を変更したときに自動的に保存</span>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label>📅 授業スケジュール</label>
+            <p class="schedule-hint">授業がある曜日・時限をチェックしてください</p>
+            <div class="schedule-calendar">
+                <div class="schedule-header">
+                    <div class="schedule-cell header-cell"></div>
+                    <div class="schedule-cell header-cell">月</div>
+                    <div class="schedule-cell header-cell">火</div>
+                    <div class="schedule-cell header-cell">水</div>
+                    <div class="schedule-cell header-cell">木</div>
+                    <div class="schedule-cell header-cell">金</div>
+                </div>
+                <div class="schedule-row" data-period="1">
+                    <div class="schedule-cell period-cell">1限<br><span class="time-label">8:50</span></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="mon" data-period="1"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="tue" data-period="1"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="wed" data-period="1"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="thu" data-period="1"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="fri" data-period="1"
+                            class="schedule-checkbox"></div>
+                </div>
+                <div class="schedule-row" data-period="2">
+                    <div class="schedule-cell period-cell">2限<br><span class="time-label">10:45</span></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="mon" data-period="2"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="tue" data-period="2"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="wed" data-period="2"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="thu" data-period="2"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="fri" data-period="2"
+                            class="schedule-checkbox"></div>
+                </div>
+                <div class="schedule-row" data-period="3">
+                    <div class="schedule-cell period-cell">3限<br><span class="time-label">13:15</span></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="mon" data-period="3"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="tue" data-period="3"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="wed" data-period="3"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="thu" data-period="3"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="fri" data-period="3"
+                            class="schedule-checkbox"></div>
+                </div>
+                <div class="schedule-row" data-period="4">
+                    <div class="schedule-cell period-cell">4限<br><span class="time-label">15:10</span></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="mon" data-period="4"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="tue" data-period="4"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="wed" data-period="4"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="thu" data-period="4"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="fri" data-period="4"
+                            class="schedule-checkbox"></div>
+                </div>
+                <div class="schedule-row" data-period="5">
+                    <div class="schedule-cell period-cell">5限<br><span class="time-label">17:05</span></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="mon" data-period="5"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="tue" data-period="5"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="wed" data-period="5"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="thu" data-period="5"
+                            class="schedule-checkbox"></div>
+                    <div class="schedule-cell"><input type="checkbox" data-day="fri" data-period="5"
+                            class="schedule-checkbox"></div>
+                </div>
+            </div>
+        </div>
+
         <button id="save-btn" class="save-button">保存</button>
 
         <div id="message" class="message"></div>
+
+        <div class="credit-footer">
+            <div class="credit-item">
+                <span class="credit-label">開発者:</span>
+                <span class="credit-value">andogensi</span>
+            </div>
+            <div class="credit-item">
+                <span class="credit-label">連絡先:</span>
+                <span class="credit-value">tekitpu@ggmalii.com</span>
+            </div>
+            <div class="credit-item">
+                <span class="credit-label">バージョン:</span>
+                <span class="credit-value">beta v 0.6</span>
+            </div>
+        </div>
     </div>
 
     <script src="popup.js"></script>

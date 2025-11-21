@@ -7,7 +7,7 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    width: 380px;
+    width: 420px;
     min-height: 320px;
 }
 
@@ -15,6 +15,8 @@ body {
     background: white;
     padding: 24px;
     border-radius: 0;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
 h1 {
@@ -254,4 +256,327 @@ input:checked+.slider-toggle:before {
 
 .slider-toggle:hover {
     opacity: 0.9;
+}
+
+/* スケジュールカレンダーのスタイル */
+.schedule-hint {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
+    margin-top: -6px;
+}
+
+.schedule-calendar {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    border-top: 1px solid #e0e0e0;
+}
+
+.schedule-row:first-of-type {
+    border-top: none;
+}
+
+.schedule-cell {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    min-height: 42px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.schedule-cell:last-child {
+    border-right: none;
+}
+
+.header-cell {
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 6px;
+}
+
+.period-cell {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+    font-size: 11px;
+    line-height: 1.3;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.time-label {
+    font-size: 9px;
+    font-weight: 400;
+    color: #888;
+}
+
+.schedule-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #667eea;
+    transition: transform 0.15s ease;
+}
+
+.schedule-checkbox:hover {
+    transform: scale(1.15);
+}
+
+.schedule-checkbox:active {
+    transform: scale(0.95);
+}
+
+.schedule-cell:has(.schedule-checkbox) {
+    background: #fafafa;
+    transition: background-color 0.2s ease;
+}
+
+.schedule-cell:has(.schedule-checkbox:checked) {
+    background: #f0f4ff;
+}
+
+.save-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.save-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.message {
+    margin-top: 16px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.message.show {
+    opacity: 1;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* トグルスイッチのスタイル */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toggle-label {
+    font-size: 13px;
+    color: #666;
+}
+
+/* トグルスイッチ */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider-toggle {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 26px;
+}
+
+.slider-toggle:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked+.slider-toggle {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+input:checked+.slider-toggle:before {
+    transform: translateX(24px);
+}
+
+.slider-toggle:hover {
+    opacity: 0.9;
+}
+
+/* スケジュールカレンダーのスタイル */
+.schedule-hint {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
+    margin-top: -6px;
+}
+
+.schedule-calendar {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    border-top: 1px solid #e0e0e0;
+}
+
+.schedule-row:first-of-type {
+    border-top: none;
+}
+
+.schedule-cell {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    min-height: 42px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.schedule-cell:last-child {
+    border-right: none;
+}
+
+.header-cell {
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 6px;
+}
+
+.period-cell {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+    font-size: 11px;
+    line-height: 1.3;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.time-label {
+    font-size: 9px;
+    font-weight: 400;
+    color: #888;
+}
+
+.schedule-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #667eea;
+    transition: transform 0.15s ease;
+}
+
+.schedule-checkbox:hover {
+    transform: scale(1.15);
+}
+
+.schedule-checkbox:active {
+    transform: scale(0.95);
+}
+
+.schedule-cell:has(.schedule-checkbox) {
+    background: #fafafa;
+    transition: background-color 0.2s ease;
+}
+
+.schedule-cell:has(.schedule-checkbox:checked) {
+    background: #f0f4ff;
+}
+
+.schedule-cell:has(.schedule-checkbox):hover {
+    background: #f5f5f5;
+}
+
+.schedule-cell:has(.schedule-checkbox:checked):hover {
+    background: #e8efff;
+}
+
+/* クレジットフッター */
+.credit-footer {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.credit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+}
+
+.credit-label {
+    color: #888;
+    font-weight: 500;
+}
+
+.credit-value {
+    color: #666;
 }

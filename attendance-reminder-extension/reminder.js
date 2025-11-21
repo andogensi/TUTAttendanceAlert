@@ -22,9 +22,8 @@ if (period) {
 
 // マイページを開くボタンのイベントリスナー
 document.getElementById('open-mypage').addEventListener('click', () => {
-    chrome.tabs.create({
-        url: 'https://service.cloud.teu.ac.jp/portal/mypage/'
-    });
+    // 現在のタブでマイページに遷移
+    window.location.href = 'https://service.cloud.teu.ac.jp/portal/mypage/';
 });
 
 // 出席登録完了ボタンのイベントリスナー

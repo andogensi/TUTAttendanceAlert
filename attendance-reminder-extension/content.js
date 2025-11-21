@@ -8,7 +8,7 @@ const CLASS_START_TIMES = [
     { period: 2, hour: 10, minute: 45, label: '2限' },
     { period: 3, hour: 13, minute: 15, label: '3限' },
     { period: 4, hour: 15, minute: 10, label: '4限' },
-    { period: 5, hour: 22, minute: 35, label: '5限' }
+    { period: 5, hour: 17, minute: 5, label: '5限' }
 ];
 
 // 動的に生成される授業時間範囲（設定値に基づく）
@@ -48,19 +48,36 @@ function generateClassPeriods(minutesBefore, minutesAfter) {
 
 /**
  * 現在の時刻が指定された授業時間内かチェック
+ * @param {Object} classSchedule - 授業スケジュール設定
  */
-function getCurrentClassPeriod() {
+function getCurrentClassPeriod(classSchedule) {
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
     const currentTime = currentHour * 60 + currentMinute;
+    const dayOfWeek = now.getDay(); // 0=日曜, 1=月曜, ..., 6=土曜
+
+    // 曜日を文字列に変換
+    const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const dayKey = dayMap[dayOfWeek];
+
+    // 土日または設定がない場合はnullを返す
+    if (dayOfWeek === 0 || dayOfWeek === 6 || !classSchedule || !classSchedule[dayKey]) {
+        return null;
+    }
 
     for (const period of CLASS_PERIODS) {
         const startTime = period.startHour * 60 + period.startMinute;
         const endTime = period.endHour * 60 + period.endMinute;
 
         if (currentTime >= startTime && currentTime <= endTime) {
-            return period;
+            // この時限がスケジュールにチェックされているかを確認
+            const periodIndex = period.period - 1; // 0-indexed
+            if (classSchedule[dayKey][periodIndex]) {
+                return period;
+            } else {
+                return null; // 時限はあるがスケジュールで無効化されている
+            }
         }
     }
 
@@ -240,18 +257,38 @@ function removeBanner() {
  * 時刻チェックとバナー表示制御
  */
 function checkAndShowBanner() {
-    const period = getCurrentClassPeriod();
+    // デフォルトのスケジュール（全てtrue）
+    const defaultSchedule = {
+        mon: [true, true, true, true, true],
+        tue: [true, true, true, true, true],
+        wed: [true, true, true, true, true],
+        thu: [true, true, true, true, true],
+        fri: [true, true, true, true, true]
+    };
 
-    if (period) {
-        isAttendanceCompleted(period.period, (isCompleted) => {
-            if (!isCompleted) {
-                showBanner(period);
+    try {
+        chrome.storage.sync.get({ classSchedule: defaultSchedule }, (items) => {
+            if (chrome.runtime.lastError) {
+                console.log('Extension context invalidated, skipping banner check');
+                return;
+            }
+
+            const period = getCurrentClassPeriod(items.classSchedule);
+
+            if (period) {
+                isAttendanceCompleted(period.period, (isCompleted) => {
+                    if (!isCompleted) {
+                        showBanner(period);
+                    } else {
+                        removeBanner();
+                    }
+                });
             } else {
                 removeBanner();
             }
         });
-    } else {
-        removeBanner();
+    } catch (error) {
+        console.log('Extension context invalidated:', error);
     }
 }
 
