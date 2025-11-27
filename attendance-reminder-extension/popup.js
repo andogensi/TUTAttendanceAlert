@@ -1,5 +1,3 @@
-// グローバルスコープの関数と定数を使用（importを削除）
-
 // デフォルト設定を取得する関数
 function getDefaultSettings() {
     return {

@@ -198,12 +198,14 @@ h1 {
 .toggle-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
 }
 
 .toggle-label {
     font-size: 13px;
     color: #666;
+    text-align: left;
 }
 
 /* トグルスイッチ */
@@ -393,12 +395,14 @@ input:checked+.slider-toggle:before {
 .toggle-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
 }
 
 .toggle-label {
     font-size: 13px;
     color: #666;
+    text-align: left;
 }
 
 /* トグルスイッチ */

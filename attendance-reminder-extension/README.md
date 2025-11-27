@@ -138,3 +138,7 @@ export const CLASS_START_TIMES = [
 ## ライセンス
 
 このプロジェクトは個人使用を目的としています。
+
+attendance-reminder-extension/
+    attendance-reminder-extension/
+        ├── manifest.json  

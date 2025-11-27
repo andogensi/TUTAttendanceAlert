@@ -4,19 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アラーム設定</title>
+    <title>TUT出席リマインダー</title>
     <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>⏰ アラーム設定</h1>
+        <h1>⏰ TUT出席リマインダー</h1>
 
         <div class="setting-group">
             <label for="before-slider">開始前（分）</label>
             <div class="input-row">
                 <input type="range" id="before-slider" min="0" max="60" value="10" class="slider" aria-label="開始前の分数">
-                <input type="number" id="before-number" min="0" max="60" value="10" class="number-input" aria-label="開始前の分数入力">
+                <input type="number" id="before-number" min="0" max="60" value="10" class="number-input"
+                    aria-label="開始前の分数入力">
                 <span class="unit">分</span>
             </div>
         </div>
@@ -25,7 +26,8 @@
             <label for="after-slider">開始後（分）</label>
             <div class="input-row">
                 <input type="range" id="after-slider" min="0" max="60" value="20" class="slider" aria-label="開始後の分数">
-                <input type="number" id="after-number" min="0" max="60" value="20" class="number-input" aria-label="開始後の分数入力">
+                <input type="number" id="after-number" min="0" max="60" value="20" class="number-input"
+                    aria-label="開始後の分数入力">
                 <span class="unit">分</span>
             </div>
         </div>
@@ -33,44 +35,44 @@
         <div class="setting-group">
             <label for="mypage-link-toggle">マイページリンクボタン</label>
             <div class="toggle-row">
+                <span class="toggle-label">バナーにマイページへのリンクを表示</span>
                 <label class="switch">
                     <input type="checkbox" id="mypage-link-toggle">
                     <span class="slider-toggle"></span>
                 </label>
-                <span class="toggle-label">バナーにマイページへのリンクを表示</span>
             </div>
         </div>
 
         <div class="setting-group">
             <label for="new-tab-popup-toggle">新しいタブでリマインダー表示</label>
             <div class="toggle-row">
+                <span class="toggle-label">新しいタブを開いたとき、授業時間内ならリマインダーページを表示</span>
                 <label class="switch">
                     <input type="checkbox" id="new-tab-popup-toggle">
                     <span class="slider-toggle"></span>
                 </label>
-                <span class="toggle-label">新しいタブを開いたとき、授業時間内ならリマインダーページを表示</span>
             </div>
         </div>
 
         <div class="setting-group">
             <label for="auto-save-toggle">自動保存</label>
             <div class="toggle-row">
+                <span class="toggle-label">設定を変更したときに自動的に保存</span>
                 <label class="switch">
                     <input type="checkbox" id="auto-save-toggle">
                     <span class="slider-toggle"></span>
                 </label>
-                <span class="toggle-label">設定を変更したときに自動的に保存</span>
             </div>
         </div>
 
         <div class="setting-group">
             <label for="notification-toggle">デスクトップ通知</label>
             <div class="toggle-row">
+                <span class="toggle-label">授業開始前にOS通知を表示</span>
                 <label class="switch">
                     <input type="checkbox" id="notification-toggle">
                     <span class="slider-toggle"></span>
                 </label>
-                <span class="toggle-label">授業開始前にOS通知を表示</span>
             </div>
         </div>
 
@@ -169,7 +171,7 @@
             </div>
             <div class="credit-item">
                 <span class="credit-label">バージョン:</span>
-                <span class="credit-value">Beta v0.7</span>
+                <span class="credit-value">Beta v0.8</span>
             </div>
         </div>
     </div>

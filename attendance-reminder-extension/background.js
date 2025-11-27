@@ -34,7 +34,7 @@ const STORAGE_KEYS = {
     NOTIFICATION_ENABLED: 'notificationEnabled'
 };
 
-// Utility functions
+
 function getDateKey() {
     const today = new Date();
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
