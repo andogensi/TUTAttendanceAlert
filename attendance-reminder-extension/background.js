@@ -35,14 +35,6 @@ const STORAGE_KEYS = {
     REMINDER_SHOWN: 'reminderShown'
 };
 
-// リマインダーを表示しないURLパターン
-const EXCLUDED_URL_PATTERNS = [
-    'https://service.cloud.teu.ac.jp/moodle_epyc/',
-    'https://service.cloud.teu.ac.jp/eye/',
-    'chrome://newtab/'
-];
-
-
 function getDateKey() {
     const today = new Date();
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -122,58 +114,6 @@ function getSettings(defaults = {}) {
     });
 }
 
-// 大学APIから出席状態を確認する関数
-async function checkAttendanceStatusFromAPI() {
-    try {
-        const response = await fetch('https://service.cloud.teu.ac.jp/eye/request/myinfo');
-        if (!response.ok) {
-            console.log('API取得失敗:', response.status);
-            return null;
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.log('API呼び出しエラー:', error);
-        return null;
-    }
-}
-
-// 時限番号をAPIの時限コード(hachioji1-5)に変換
-function periodNumberToPeriodCode(periodNumber) {
-    return `hachioji${periodNumber}`;
-}
-
-// APIから現在ATTENDINGの授業があるかチェック
-async function isAttendingInAPI(periodNumber) {
-    try {
-        const apiData = await checkAttendanceStatusFromAPI();
-        if (!apiData || !apiData.lectures) {
-            return false;
-        }
-
-        const periodCode = periodNumberToPeriodCode(periodNumber);
-        
-        // 現在の時刻
-        const now = new Date().getTime();
-        
-        for (const lecture of apiData.lectures) {
-            // 指定された時限で、現在時刻が授業時間内で、statusがATTENDINGの場合
-            if (lecture.period === periodCode && 
-                lecture.status === 'ATTENDING' &&
-                lecture.begin_time <= now && 
-                lecture.end_time >= now) {
-                console.log('API上でATTENDING状態:', lecture.lecture_name);
-                return true;
-            }
-        }
-        
-        return false;
-    } catch (error) {
-        console.log('API出席確認エラー:', error);
-        return false;
-    }
-}
-
 function isAttendanceCompleted(periodNumber) {
     return new Promise((resolve) => {
         const dateKey = getDateKey();
@@ -195,18 +135,6 @@ function isAttendanceCompleted(periodNumber) {
             resolve(false);
         }
     });
-}
-
-// URLがリマインダー表示から除外されるかチェック
-function shouldExcludeUrl(url) {
-    if (!url) return false;
-    
-    for (const pattern of EXCLUDED_URL_PATTERNS) {
-        if (url.startsWith(pattern)) {
-            return true;
-        }
-    }
-    return false;
 }
 
 // 既にリマインダーを表示したかチェック
@@ -266,22 +194,8 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             minutesAfter: DEFAULT_MINUTES_AFTER,
             classSchedule: DEFAULT_CLASS_SCHEDULE
         });
+        
         if (!settings.showPopupOnNewTab) {
-            return;
-        }
-        
-        // URLが指定されている場合は除外パターンをチェック
-        if (tab.url && shouldExcludeUrl(tab.url)) {
-            console.log('除外URLのため、リマインダーをスキップ:', tab.url);
-            return;
-        }
-        if (tab.pendingUrl && shouldExcludeUrl(tab.pendingUrl)) {
-            console.log('除外URLのため、リマインダーをスキップ:', tab.pendingUrl);
-            return;
-        }
-        
-        // 新しいタブでない場合はスキップ
-        if (tab.url && tab.url !== 'chrome://newtab/' && !tab.pendingUrl) {
             return;
         }
         
@@ -291,45 +205,40 @@ chrome.tabs.onCreated.addListener(async (tab) => {
             settings.classSchedule
         );
 
-        if (period) {
-            // 既にこの時限でリマインダーを表示済みかチェック
-            const alreadyShown = await isReminderShown(period.period);
-            if (alreadyShown) {
-                console.log(`${period.period}限のリマインダーは既に表示済みのため、スキップ`);
-                return;
-            }
-            
-            // ローカルストレージの出席登録状態をチェック
-            const isCompleted = await isAttendanceCompleted(period.period);
-            
-            // APIのATTENDING状態もチェック
-            const isAttending = await isAttendingInAPI(period.period);
+        if (!period) {
+            return;
+        }
+        
+        // ローカルストレージの出席登録状態をチェック
+        const isCompleted = await isAttendanceCompleted(period.period);
 
-            // どちらかが完了していればリマインダーを表示しない
-            if (!isCompleted && !isAttending) {
-                const reminderUrl = chrome.runtime.getURL(`reminder.html?period=${period.period}`);
+        // 完了していなければリマインダーを表示
+        if (!isCompleted) {
+            const reminderUrl = chrome.runtime.getURL(`reminder.html?period=${period.period}`);
 
-                // リマインダー表示済みフラグを設定
-                await setReminderShown(period.period);
+            // 新しいタブの場合、少し待ってからURLを更新
+            setTimeout(() => {
+                chrome.tabs.get(tab.id, (currentTab) => {
+                    if (chrome.runtime.lastError) {
+                        console.log('タブが既に閉じられています');
+                        return;
+                    }
 
-                setTimeout(() => {
-                    chrome.tabs.get(tab.id, (currentTab) => {
-                        if (chrome.runtime.lastError) {
-                            return;
-                        }
-
-                        if (!currentTab.url || currentTab.url === 'chrome://newtab/') {
-                            chrome.tabs.update(tab.id, {
-                                url: reminderUrl
-                            }).catch((error) => {
-                                console.log('Could not update tab:', error);
-                            });
-                        }
-                    });
-                }, 100);
-            } else if (isAttending) {
-                console.log(`${period.period}限はAPI上でATTENDING状態のため、リマインダーをスキップ`);
-            }
+                    // 新しいタブ (about:blank, chrome://newtab/等) の場合のみ更新
+                    const isNewTab = !currentTab.url || 
+                                    currentTab.url === 'about:blank' || 
+                                    currentTab.url === 'chrome://newtab/' ||
+                                    currentTab.pendingUrl === 'chrome://newtab/';
+                    
+                    if (isNewTab) {
+                        chrome.tabs.update(tab.id, {
+                            url: reminderUrl
+                        }).catch((error) => {
+                            console.log('タブの更新に失敗:', error);
+                        });
+                    }
+                });
+            }, 200);
         }
     } catch (error) {
         console.log('Error in tab creation handler:', error);
@@ -433,13 +342,6 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
         const isCompleted = await isAttendanceCompleted(period);
         if (isCompleted) {
             console.log(`${period}限は出席登録済みです`);
-            return;
-        }
-
-        // APIのATTENDING状態もチェック
-        const isAttending = await isAttendingInAPI(period);
-        if (isAttending) {
-            console.log(`${period}限はAPI上でATTENDING状態のため、通知をスキップ`);
             return;
         }
 
